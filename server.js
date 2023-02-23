@@ -4,7 +4,6 @@ import router from "./router.js";
 import cors from "cors";
 import session from 'express-session';
 
-//import * as model from "./bookModel.js"
 import * as tools from './tools.js';
 import * as config from './config.js';
 import cookieParser from 'cookie-parser';
