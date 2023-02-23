@@ -2,18 +2,44 @@ import express from "express";
 import mongoose from "mongoose";
 import router from "./router.js";
 import cors from "cors";
-import * as model from "./bookModel.js"
+import session from 'express-session';
 
+import * as tools from './tools.js';
+import * as config from './config.js';
+import cookieParser from 'cookie-parser';
+import * as model from './model.js';
 
 
 mongoose.set('strictQuery', false)
 
 const app = express();
 app.use(express.json()); 
-app.use(cors())
+
+app.use(cors({
+	origin: config.FRONTEND_URL,
+	methods: ['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS', 'HEAD'],
+	credentials: true
+}));
+app.use(cookieParser());
+
+app.use(
+	session({
+		resave: true,
+		saveUninitialized: true,
+		secret: config.SESSION_SECRET,
+		cookie: {
+			httpOnly: true,
+			sameSite: 'lax',
+			secure: false
+		}
+	})
+);
+
+
+
 
 const PORT = 3005;
-const DB_URL = "mongodb+srv://akrabinelly:5454@cluster0.3mwt3bw.mongodb.net/?retryWrites=true&w=majority";
+
 
 app.get("/", (req, res) => {
     res.send(model.getApiInstructionsHtml())
@@ -27,9 +53,57 @@ app.get("/test", (req, res) => {
 })
 
 
+
+app.post('/login', async (req, res) => {
+	const { username, password } = req.body;
+	const user = await model.getUser(username, password);
+	if (user !== null) {
+		const isCorrect = await tools.passwordIsCorrect(password, user.hash);
+		if (isCorrect) {
+			const frontendUser = {
+				_id: user._id,
+				username: user.username,
+			
+			}
+			req.session.user = frontendUser;
+			req.session.cookie.expires = new Date(Date.now() + config.SECONDS_TILL_SESSION_TIMEOUT * 1000);
+			req.session.save();
+			res.status(200).send(frontendUser);
+		} else {
+			const anonymousUser = await model.getAnonymousUser();
+			res.status(200).send(anonymousUser);
+		}
+	} else {
+		const anonymousUser = await model.getAnonymousUser();
+		res.status(200).send(anonymousUser);
+	}
+});
+
+app.get('/get-current-user', async (req, res) => {
+	if (req.session.user) {
+		res.send(req.session.user);
+	} else {
+		const anonymousUser = await model.getAnonymousUser();
+		res.status(200).send(anonymousUser);
+	}
+});
+
+app.get('/logout', (req, res) => {
+	req.session.destroy((err) => {
+		if (err) {
+			res.send('ERROR');
+		} else {
+			res.send('logged out');
+		}
+	});
+});
+
+
+
+
 const startApp = async () => {
     try {
-        await mongoose.connect(DB_URL) 
+        await mongoose.connect(config.MONGODB_CONNECTION) 
         app.listen(PORT, () => console.log(`Server started on Port ${PORT}`));
     } catch (err) {
         console.log(err);
