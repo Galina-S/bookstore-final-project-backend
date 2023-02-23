@@ -1,0 +1,64 @@
+@url = http://localhost:3005
+
+### GET INFO
+GET {{url}}
+
+
+### GET ALL BOOKS
+GET {{url}}/books
+
+
+### GET SPECIFIC BOOK
+GET {{url}}/books/63e4d27dd94195b72c57e689
+
+
+### DELETE BOOK
+DELETE {{url}}/books/63f4c17d06baace1f1089546
+
+
+### BAD LOGIN 
+POST {{url}}/login
+content-type: application/json
+
+{
+  "username": "Galina",
+	"password": "sdsds"
+}
+
+
+### GOOD LOGIN
+POST {{url}}/login
+content-type: application/json
+
+{
+  "username": "Galina",
+  "password": "Gggg111!"
+}
+
+
+### GOOD LOGIN
+POST {{url}}/login
+content-type: application/json
+
+{
+  "username": "Nelly",
+  "password": "Nnnn111!"
+}
+
+### GOOD LOGIN
+POST {{url}}/login
+content-type: application/json
+
+{
+  "username": "Mila",
+  "password": "Mmmm111!"
+}
+
+
+
+### GET CURRENT USER
+GET {{url}}/get-current-user
+
+
+### LOGOUT
+GET {{url}}/logout
