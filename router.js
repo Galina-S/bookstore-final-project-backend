@@ -1,6 +1,4 @@
 import express from "express";
-import * as model from './controller.js';
-import * as tools from './tools.js';
 
 import {
   getAllBooks,
@@ -9,9 +7,8 @@ import {
   updateBook,
   deleteBook,
   loginUser,
-  getCurrentUser
-
-
+  getCurrentUser,
+  registerNewUser
 
 } from "./controller.js";
 
@@ -31,6 +28,8 @@ router.delete("/books/:id", deleteBook);
 router.post("/login", loginUser);
 
 router.get('/get-current-user', getCurrentUser);
+
+router.post('/register', registerNewUser);
 
 
 export default router;

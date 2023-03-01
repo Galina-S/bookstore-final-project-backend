@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import router from "./router.js";
-import cors from "cors";
+import cors from "cors";import User from "./src/models/User.js";
 import session from 'express-session';
 
 import * as tools from './tools.js';
@@ -36,10 +36,7 @@ app.use(
 );
 
 
-
-
 const PORT = 3005;
-
 
 app.get("/", (req, res) => {
     res.send(model.getApiInstructionsHtml())
@@ -51,8 +48,6 @@ app.use("/", router);
 app.get("/test", (req, res) => {
     res.json(model.getTest())
 })
-
-
 
 app.post('/login', async (req, res) => {
 	const { username, password } = req.body;
@@ -97,8 +92,6 @@ app.get('/logout', (req, res) => {
 		}
 	});
 });
-
-
 
 
 const startApp = async () => {

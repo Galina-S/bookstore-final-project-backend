@@ -1,5 +1,5 @@
 import Book from "./src/models/Book.js";
-//import User from './src/models/User.js';
+import User from "./src/models/User.js";
 import * as model from './model.js';
 import * as tools from './tools.js';
 import * as config from './config.js';
@@ -65,13 +65,18 @@ const updateBook = async (req, res) => {
 };
 
 const registerNewUser = async (req, res) => {
-  const { name, email, password } = req.body;
+   
   try {
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Please fill in all fields.' });
-    }
+    // if (!username || !password || !matchPassword) {
+    //   return res.status(400).json({ error: 'Please fill in all fields.' });
+    // }
+
     // Store the data in a database
-    // ...
+    
+    const user = await User.create(req.body);
+    console.log(user)
+    await user.save();
+    
     return res.status(200).json({ message: 'Registration successful.' });
   } catch (err) {
     res.status(500).send(err);

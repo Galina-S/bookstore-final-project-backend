@@ -54,11 +54,19 @@ content-type: application/json
   "password": "Mmmm111!"
 }
 
-
-
 ### GET CURRENT USER
 GET {{url}}/get-current-user
 
 
 ### LOGOUT
 GET {{url}}/logout
+
+
+### REGISTER
+GET {{url}}/register
+
+{
+  "username": "GAnna",
+  "password": "Aaaa111!!",
+  "matchPassword": "Aaaa111!"
+}
