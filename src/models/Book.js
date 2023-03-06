@@ -9,8 +9,12 @@ const Book = new mongoose.Schema( {
     ISBN: Number,
     puplication: Date,
     category: Array,
-    age: Number, 
+    publisher: String, 
     pages: Number, 
+    viewsCount: {
+        type: Number,
+        default: 0
+    },
     
 });
 

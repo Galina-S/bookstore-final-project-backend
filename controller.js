@@ -12,6 +12,7 @@ const getAllBooks = async (req, res) => {
     res.status(500).send(err);
   }
 };
+
 const getOneBook = async (req, res) => {
   try {
     const bookId = req.params.id;
@@ -67,9 +68,9 @@ const updateBook = async (req, res) => {
 const registerNewUser = async (req, res) => {
    
   try {
-    // if (!username || !password || !matchPassword) {
-    //   return res.status(400).json({ error: 'Please fill in all fields.' });
-    // }
+    if (!username || !password || !matchPassword) {
+      return res.status(400).json({ message: 'Please fill in all fields.' });
+    }
 
     // Store the data in a database
     

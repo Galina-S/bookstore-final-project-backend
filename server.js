@@ -8,6 +8,7 @@ import * as tools from './tools.js';
 import * as config from './config.js';
 import cookieParser from 'cookie-parser';
 import * as model from './model.js';
+import Book from "./src/models/Book.js";
 
 
 mongoose.set('strictQuery', false)
@@ -93,6 +94,68 @@ app.get('/logout', (req, res) => {
 	});
 });
 
+
+// // Define an API endpoint to update the views count for a BookPage
+// app.put('/books/:id/views', async (req, res) => {
+
+// 	try {
+// 		const book = await Book.findByIdAndUpdate(
+// 		  req.params.id,
+// 		  { $inc: { viewsCount: 1 } }, // Increment viewsCount by 1
+// 		  { new: true } // Return the updated document
+// 		);
+// 		res.json(book);
+// 	  } catch (err) {
+// 		console.error(err);
+// 		res.status(500).json({ message: 'Server error' });
+// 	  }
+
+
+// 	// const { id } = req.params;
+// 	// const { viewsCount } = req.body;
+// 	// // Update the viewsCount in your database or data storage of choice for the BookPage with the given id
+// 	// // Return the updated viewsCount value
+// 	// res.json({ viewsCount });
+//   });
+
+
+//   app.get('/books/:id/views', async (req, res) => {
+// 	try {
+// 	  const book = await Book.findById(req.params.id);
+// 	  book.viewsCount += 1;
+// 	  await book.save();
+// 	  res.status(200).send('View count updated successfully');
+// 	} catch (error) {
+// 	  console.error(error);
+// 	  res.status(500).send('Error updating view count');
+// 	}
+//   });
+
+
+
+  app.get('/books/:id/viewsCount', async (req, res) => {
+	try {
+	  const book = await Book.findById(req.params.id);
+	  res.status(200).send(book.viewsCount);
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send('Error retrieving view count');
+	}
+  });
+
+  app.get('/books/:id/views', async (req, res) => {
+	try {
+	  const book = await Book.findByIdAndUpdate(
+		req.params.id,
+		{ $inc: { viewsCount: 1 } },
+		{ new: true }
+	  );
+	  res.status(200).json(book);
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send('Error updating view count');
+	}
+  });
 
 const startApp = async () => {
     try {
