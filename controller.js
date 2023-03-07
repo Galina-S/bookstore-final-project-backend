@@ -14,26 +14,92 @@ const getAllBooks = async (req, res) => {
 };
 
 const getOneBook = async (req, res) => {
+  const bookId = req.params.id;
+  let book;
   try {
-    const bookId = req.params.id;
-    if (!bookId) {
-      res.status(400).json({ message: "Not found" }); /** testen */
-    }
-    const getOne = await Book.findById(bookId);
-    return res.status(200).json(getOne);
+    book = await Book.findById(bookId);
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).json({message: 'Could not get any book'} );
   }
+  if (!book) {
+    return res.status(404).json({ message: "No book found" }); /** testen */
+  }
+  return res.status(200).json({book});
+  
+    
+
+  //   Book.findOneAndUpdate({
+  //     _id: bookId,
+  // }, {
+  //     $inc: { viewsCount: 1},  //increment
+  // },
+  // {
+  //     returnDocument: 'after', //return an actual doc after update
+  // },
+  // (err, doc) => {
+  //     if (err) {
+  //         console.log(err);64063ec81f90ebc5547c9745
+  //         return res.status(500).json({
+  //             message: 'The book could not be returned',
+  //         });
+  //     }
+
+  //     if (!doc) {
+  //         return res.status(404).json({
+  //             message: 'Book not found',
+  //         });
+  //     }
+
+  //     res.json(doc);
+  // },
+  // )
+    
+  
 };
 
+
 const addNewBook = async (req, res) => {
+      const {author, img, title, description, price, ISBN, 
+        puplication, category, publisher, pages, viewsCount} =req.body;
+      let book;
   try {
-    const addBook = await Book.create(req.body);
-    return res.status(200).json(addBook);
+     book =  await Book.create({
+      author, img, title, description, price, ISBN, 
+        puplication, category, publisher, pages, viewsCount
+    });
+
+    await book.save();
   } catch (err) {
-    res.status(500).send(err);
+    console.log(err)
+  }  
+  if (!book) {
+    return res.status(500).json({ message: "Unable to Add new Book" }); /** testen */
   }
+  return res.status(201).json({ book }); 
 };
+
+
+
+const updateBook = async (req, res) => {
+  const bookId = req.params.id;
+  let book;
+  const {author, img, title, description, price, 
+    ISBN, puplication, category, publisher, pages, viewsCount} = req.body;
+  try {
+    
+      book = await Book.findByIdAndUpdate(bookId, 
+      {author, img, title, description, price, ISBN, puplication, category, publisher, pages, viewsCount});
+      book = await book.save();
+   
+  } catch (err) {
+    console.log(err);
+  }
+  if (!bookId) {
+    return res.status(404).json({ message: "Unable to update by this ID" }); /** testen */
+  }
+  return res.status(201).json({ book }); 
+};
+
 
 const deleteBook = async (req, res) => {
   try {
@@ -45,21 +111,7 @@ const deleteBook = async (req, res) => {
       }); /** testen */
     }
     const deleteBook = await Book.findByIdAndDelete(bookId);
-    return res.json(deleteBook);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-};
-
-const updateBook = async (req, res) => {
-  try {
-    const bookId = req.params.id;
-    const book = req.body;
-    if (!bookId) {
-      res.status(400).json({ message: "ID Not found" }); /** testen */
-    }
-    const updateOneBook = await Book.findByIdAndUpdate(bookId, book);
-    return res.json(updateOneBook);
+    return res.status(200).json({message: "Book successfully deleted"});
   } catch (err) {
     res.status(500).send(err);
   }
@@ -120,4 +172,14 @@ const getCurrentUser = async (req, res) => {
 	}
 };
 
-export { getAllBooks, addNewBook, getOneBook, updateBook, deleteBook, registerNewUser, loginUser, getCurrentUser};
+
+
+
+
+
+export { getAllBooks, addNewBook, 
+  getOneBook, updateBook,
+   deleteBook, registerNewUser, 
+   loginUser, getCurrentUser,
+
+  };

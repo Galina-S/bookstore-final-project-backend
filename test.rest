@@ -9,8 +9,15 @@ GET {{url}}/books
 
 
 ### GET SPECIFIC BOOK
-GET {{url}}/books/63e4d27dd94195b72c57e689
+GET {{url}}/books/63f3720a88f231c693766659
 
+
+### Change the viewsCount for a SPECIFIC BOOK 
+PUT {{url}}/books/63f3720a88f231c693766659
+content-type: application/json
+{
+   "viewsCount": 17
+}
 
 ### DELETE BOOK
 DELETE {{url}}/books/63f4c17d06baace1f1089546

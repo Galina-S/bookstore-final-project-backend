@@ -1,5 +1,6 @@
 import express from "express";
 
+
 import {
   getAllBooks,
   addNewBook,
@@ -8,7 +9,8 @@ import {
   deleteBook,
   loginUser,
   getCurrentUser,
-  registerNewUser
+  registerNewUser,
+  
 
 } from "./controller.js";
 
@@ -30,6 +32,14 @@ router.post("/login", loginUser);
 router.get('/get-current-user', getCurrentUser);
 
 router.post('/register', registerNewUser);
+
+
+
+//router.put('/books/:id/views', updateBookViews);
+
+
+
+
 
 
 export default router;

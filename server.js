@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import router from "./router.js";
-import cors from "cors";import User from "./src/models/User.js";
+import cors from "cors";
 import session from 'express-session';
 
 import * as tools from './tools.js';
@@ -94,30 +94,62 @@ app.get('/logout', (req, res) => {
 	});
 });
 
-//   app.get('/books/:id/viewsCount', async (req, res) => {
-// 	try {
-// 	  const book = await Book.findById(req.params.id);
-// 	  res.status(200).send(book.viewsCount);
-// 	} catch (error) {
-// 	  console.error(error);
-// 	  res.status(500).send('Error retrieving view count');
+
+
+
+
+// app.use('/books/:id', (req, res, next) => {
+// 	if (req.method === 'GET') {
+// 	  // Redirect the GET request to /books/:id/open
+// 	  res.redirect(`/book/${req.params.id}/open`);
+// 	} else {
+// 	  // Pass the request to the next middleware
+// 	  next();
 // 	}
 //   });
 
-//   app.get('/books/:id/views', async (req, res) => {
-// 	try {
-// 	  const book = await Book.findByIdAndUpdate(
-// 		req.params.id,
-// 		{ $inc: { viewsCount: 1 } },
-// 		{ new: true }
-// 	  );
-// 	  res.status(200).json(book);
-// 	} catch (error) {
-// 	  console.error(error);
-// 	  res.status(500).send('Error updating view count');
-// 	}
-//   });
 
+
+//   app.put('/books/:id/open', async (req, res) => {
+// 	try {
+// 	const bookId = req.params.id;
+// 	const book = req.body;
+
+// 	if (!bookId) {
+// 		res.status(400).json({ message: "ID Not found" }); /** testen */
+// 	  }
+
+// 	  const updateOneBook = await Book.findByIdAndUpdate(bookId, book);
+// 	  return res.json(updateOneBook);
+
+	// try {
+	//   const book = await Book.findOneAndUpdate(
+	// 	{ _id: req.params.id },
+		
+	// 	//{ $inc: { viewsCount: 1 } },
+	// 	{ new: true }
+	//   );
+  
+	//   res.json({ success: true, book });
+	// } catch (err) {
+	//   console.log(err);
+	//   res.status(500).json({ success: false, message: 'Internal server error' });
+	// }
+// } catch (err) {
+//     res.status(500).send(err);
+// }
+//   });
+  
+
+  app.get('/books/:id/views', async (req, res) => {
+	const book = await Book.findById(req.params.id);
+	book.viewsCount += 1;
+	await book.save();
+	res.send({ viewsCount: book.viewsCount });
+  });
+  
+  
+  
 const startApp = async () => {
     try {
         await mongoose.connect(config.MONGODB_CONNECTION) 
@@ -126,4 +158,6 @@ const startApp = async () => {
         console.log(err);
     }
 } 
+
+  
 startApp();
