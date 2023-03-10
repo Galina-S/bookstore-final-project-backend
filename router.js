@@ -10,6 +10,7 @@ import {
   loginUser,
   getCurrentUser,
   registerNewUser,
+  findNovels,
   //updateBookViews
 
 } from "./controller.js";
@@ -32,6 +33,8 @@ router.post("/login", loginUser);
 router.get('/get-current-user', getCurrentUser);
 
 router.post('/register', registerNewUser);
+
+router.get("/novels", findNovels)
 
 
 
