@@ -59,7 +59,7 @@ app.post('/login', async (req, res) => {
 			const frontendUser = {
 				_id: user._id,
 				username: user.username,
-			
+				img: user.img,			
 			}
 			req.session.user = frontendUser;
 			req.session.cookie.expires = new Date(Date.now() + config.SECONDS_TILL_SESSION_TIMEOUT * 1000);

@@ -148,6 +148,7 @@ const loginUser =  async (req, res) => {
 				_id: user._id,
 				username: user.username,
 				email: user.email,
+        img: user.img
 			}
       //console.log(frontendUser)
 			req.session.user = frontendUser;
