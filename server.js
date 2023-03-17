@@ -95,52 +95,6 @@ app.get('/logout', (req, res) => {
 });
 
 
-
-
-
-// app.use('/books/:id', (req, res, next) => {
-// 	if (req.method === 'GET') {
-// 	  // Redirect the GET request to /books/:id/open
-// 	  res.redirect(`/book/${req.params.id}/open`);
-// 	} else {
-// 	  // Pass the request to the next middleware
-// 	  next();
-// 	}
-//   });
-
-
-
-//   app.put('/books/:id/open', async (req, res) => {
-// 	try {
-// 	const bookId = req.params.id;
-// 	const book = req.body;
-
-// 	if (!bookId) {
-// 		res.status(400).json({ message: "ID Not found" }); /** testen */
-// 	  }
-
-// 	  const updateOneBook = await Book.findByIdAndUpdate(bookId, book);
-// 	  return res.json(updateOneBook);
-
-	// try {
-	//   const book = await Book.findOneAndUpdate(
-	// 	{ _id: req.params.id },
-		
-	// 	//{ $inc: { viewsCount: 1 } },
-	// 	{ new: true }
-	//   );
-  
-	//   res.json({ success: true, book });
-	// } catch (err) {
-	//   console.log(err);
-	//   res.status(500).json({ success: false, message: 'Internal server error' });
-	// }
-// } catch (err) {
-//     res.status(500).send(err);
-// }
-//   });
-  
-
   app.get('/books/:id/views', async (req, res) => {
 	const book = await Book.findById(req.params.id);
 	book.viewsCount += 1;

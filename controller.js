@@ -6,11 +6,13 @@ import * as config from './config.js';
 
 const findNovels = async (req, res) => {
  try {
-  const novels = await Book.find({category: { $regex: 'Liebe|Frau|Frauen|Liebesroman|Gefühl', $options: 'i'}});
+  const novels = await Book.find({category: 'Liebe' || 'Frauen'});
   return res.status(200).json(novels);
  } catch (err) {
-  res.status(500).send(err);  
+  res.status(500).send(err);
+  
  }
+
 };
 
 const getAllBooks = async (req, res) => {
@@ -26,44 +28,18 @@ const getOneBook = async (req, res) => {
   const bookId = req.params.id;
   let book;
   try {
-    book = await Book.findById(bookId);
+    book = await Book.findOneAndUpdate({_id: bookId}, {
+      $inc: { viewsCount: 1},  //increment
+  },{
+    returnDocument: 'after', //return an actual doc after update
+});
   } catch (err) {
     res.status(500).json({message: 'Could not get any book'} );
   }
   if (!book) {
     return res.status(404).json({ message: "No book found" }); /** testen */
   }
-  return res.status(200).json({book});
-  
-    
-
-  //   Book.findOneAndUpdate({
-  //     _id: bookId,
-  // }, {
-  //     $inc: { viewsCount: 1},  //increment
-  // },
-  // {
-  //     returnDocument: 'after', //return an actual doc after update
-  // },
-  // (err, doc) => {
-  //     if (err) {
-  //         console.log(err);64063ec81f90ebc5547c9745
-  //         return res.status(500).json({
-  //             message: 'The book could not be returned',
-  //         });
-  //     }
-
-  //     if (!doc) {
-  //         return res.status(404).json({
-  //             message: 'Book not found',
-  //         });
-  //     }
-
-  //     res.json(doc);
-  // },
-  // )
-    
-  
+  return res.status(200).json({book});  
 };
 
 

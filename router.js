@@ -37,7 +37,6 @@ router.post('/register', registerNewUser);
 router.get("/novels", findNovels)
 
 
-
 //router.put('/books/:id/views', updateBookViews);
 
 
