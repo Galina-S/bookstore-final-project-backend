@@ -6,7 +6,7 @@ import * as config from './config.js';
 
 const findNovels = async (req, res) => {
  try {
-  const novels = await Book.find({category: 'Liebe' || 'Frauen'});
+  const novels = await Book.find({category: 'Liebe' || 'Frauen' || 'Roman'});
   return res.status(200).json(novels);
  } catch (err) {
   res.status(500).send(err);
