@@ -70,10 +70,12 @@ GET {{url}}/logout
 
 
 ### REGISTER
-GET {{url}}/register
+POST {{url}}/register
+content-type: application/json
 
 {
-  "username": "GAnna",
-  "password": "Aaaa111!!",
-  "matchPassword": "Aaaa111!"
+    "username": "Juli",
+    "password": "Jul22",
+    "email": "hall@gmail.com",
+    "matchPassword": "Jul"
 }

@@ -9,7 +9,7 @@ import {
   deleteBook,
   loginUser,
   getCurrentUser,
-  registerNewUser,
+  // registerNewUser,
   findNovels,
   //updateBookViews
 
@@ -32,7 +32,7 @@ router.post("/login", loginUser);
 
 router.get('/get-current-user', getCurrentUser);
 
-router.post('/register', registerNewUser);
+// router.post('/register', registerNewUser);
 
 router.get("/novels", findNovels)
 

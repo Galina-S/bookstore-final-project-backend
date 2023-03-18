@@ -102,25 +102,6 @@ const deleteBook = async (req, res) => {
   }
 };
 
-const registerNewUser = async (req, res) => {
-   
-  try {
-    if (!username || !password || !matchPassword) {
-      return res.status(400).json({ message: 'Please fill in all fields.' });
-    }
-
-    // Store the data in a database
-    
-    const user = await User.create(req.body);
-    console.log(user)
-    await user.save();
-    
-    return res.status(200).json({ message: 'Registration successful.' });
-  } catch (err) {
-    res.status(500).send(err);
-  }
-};
-
 const loginUser =  async (req, res) => {
 	const { username, password } = req.body;
 	const user = await model.getUser(username, password);
@@ -165,7 +146,7 @@ const getCurrentUser = async (req, res) => {
 
 export { getAllBooks, addNewBook, 
   getOneBook, updateBook,
-   deleteBook, registerNewUser, 
+   deleteBook, 
    loginUser, getCurrentUser,
    findNovels,
 

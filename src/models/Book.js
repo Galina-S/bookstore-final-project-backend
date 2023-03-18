@@ -11,7 +11,7 @@ const Book = new mongoose.Schema( {
     category: Array,
     publisher: String, 
     pages: Number, 
-    viewsCount: {type: Number, default: 0 }   
+    viewsCount: {type: Number, default: 0 }
 });
 
 export default mongoose.model("test-learning", Book)
