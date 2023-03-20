@@ -138,9 +138,9 @@ app.post('/register', async (req, res) => {
   
 const startApp = async () => {
     try {
-        await mongoose.connect(config.MONGODB_CONNECTION) 
-		// await mongoose.connect(process.env.MONGODB_CONNECTION) 
-        app.listen(config.PORT || 3005, () => console.log(`Server started on Port ${config.PORT}`));
+        // await mongoose.connect(config.MONGODB_CONNECTION) 
+		await mongoose.connect(process.env.MONGODB_CONNECTION) 
+        app.listen(process.env.PORT || 3005, () => console.log(`Server started on Port ${config.PORT}`));
     } catch (err) {
         console.log(err);
     }
