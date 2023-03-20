@@ -38,7 +38,6 @@ app.use(
 );
 
 
-const PORT = 3005;
 
 app.get("/", (req, res) => {
     res.send(model.getApiInstructionsHtml())
@@ -140,7 +139,8 @@ app.post('/register', async (req, res) => {
 const startApp = async () => {
     try {
         await mongoose.connect(config.MONGODB_CONNECTION) 
-        app.listen(PORT, () => console.log(`Server started on Port ${PORT}`));
+		// await mongoose.connect(process.env.MONGODB_CONNECTION) 
+        app.listen(config.PORT || 3005, () => console.log(`Server started on Port ${config.PORT}`));
     } catch (err) {
         console.log(err);
     }
