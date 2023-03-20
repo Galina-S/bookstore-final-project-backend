@@ -24,24 +24,24 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
-app.use(
-	session({
-		resave: true,
-		saveUninitialized: true,
-		secret: config.SESSION_SECRET,
-		cookie: {
-			httpOnly: true,
-			sameSite: 'lax',
-			secure: false
-		}
-	})
-);
+// app.use(
+// 	session({
+// 		resave: true,
+// 		saveUninitialized: true,
+// 		secret: config.SESSION_SECRET,
+// 		cookie: {
+// 			httpOnly: true,
+// 			sameSite: 'lax',
+// 			secure: false
+// 		}
+// 	})
+// );
 
 
 
-app.get("/", (req, res) => {
-    res.send(model.getApiInstructionsHtml())
-});
+// app.get("/", (req, res) => {
+//     res.send(model.getApiInstructionsHtml())
+// });
 
 app.use("/", router);
 
