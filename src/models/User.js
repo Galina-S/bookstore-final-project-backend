@@ -5,7 +5,6 @@ export const User= new mongoose.Schema({
 	email: String,
 	hash: String,
 	img:String,
-	comments: {type: Array, default: [] },
 	favorites:{type: Array, default: [] }
 });
 

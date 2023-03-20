@@ -102,7 +102,7 @@ const deleteBook = async (req, res) => {
 const loginUser =  async (req, res) => {
 	const { username, password } = req.body;
 	const user = await model.getUser(username, password);
-  console.log(user)
+  // console.log(user)
 	if (user !== null) {
 		const passwordIsCorrect = await tools.passwordIsCorrect(password, user.hash);
 		if (passwordIsCorrect) {
