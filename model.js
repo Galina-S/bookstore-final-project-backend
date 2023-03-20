@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 import  User  from './src/models/User.js';
 
 
-mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGODB_CONNECTION);
+// mongoose.set('strictQuery', false);
+// mongoose.connect(process.env.MONGODB_CONNECTION);
 
 export const getUser = async (username, password) => {
 	const user = await User.findOne({ username });
