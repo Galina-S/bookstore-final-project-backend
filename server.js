@@ -60,6 +60,8 @@ app.post('/login', async (req, res) => {
 				_id: user._id,
 				username: user.username,
 				img: user.img,			
+				accessGroups: user.accessGroups,
+				favorites: user.favorites,
 			}
 			req.session.user = frontendUser;
 			req.session.cookie.expires = new Date(Date.now() + config.SECONDS_TILL_SESSION_TIMEOUT * 1000);
@@ -126,26 +128,80 @@ app.post('/register', async (req, res) => {
 });
 	
 
+// PROTECTED ROUTES
 
-//   app.get('/books/:id/views', async (req, res) => {
-// 	const book = await Book.findById(req.params.id);
-// 	book.viewsCount += 1;
-// 	await book.save();
-// 	res.send({ viewsCount: book.viewsCount });
-//   });
+const authorizeOnlyIfAdmin = (req,res, next) => {
+	if (req.session.user && req.session.user.accessGroups.includes('admins')) {
+		next();
+	} else {
+		res.status(401).send({});
+	}
+}
+
+const authorizeOnlyIfMember = (req,res, next) => {
+	if (req.session.user && req.session.user.accessGroups.includes('members')) {
+		next();
+	} else {
+		res.status(401).send({});
+	}
+}
+
+const authorizeOnlyIfUnapprovedMember = (req,res, next) => {
+	if (req.session.user && req.session.user.accessGroups.includes('unapprovedMembers')) {
+		next();
+	} else {
+		res.status(401).send({});
+	}
+}
+
+
+app.get('/get-member-info', authorizeOnlyIfMember, async (req, res) => {
+	const members = await model.getMembers();
+	const memberInfo = {
+		message: "This is information that only **members** can see. Note that it is not loaded when the site initially loads, but only after the user has been identified (either at login or on page reload while session is still alive) and only when that user has **members** in their list of accessGroups.",
+		members
+	}
+	res.status(200).json(memberInfo);
+});
+
+
+app.get('/get-admin-info', authorizeOnlyIfAdmin, async (req, res) => {
+	const members = await model.getMembers();
+	const memberInfo = {
+		message: "This is information that only **admins** can see. Note that it is not loaded when the site initially loads, but only after the user has been identified (either at login or on page reload while session is still alive) and only when that user has **admins** in their list of accessGroups.",
+		members
+	}
+	res.status(200).json(memberInfo);
+});
+
+
+app.get('/get-unapproved-member-info', authorizeOnlyIfUnapprovedMember, async (req, res) => {
+	const memberInfo = {
+		message: "Your membership form has been received. When confirmed, you will have access to this page."
+	}
+	res.status(200).json(memberInfo);
+});
+
+app.patch('/approve-member', authorizeOnlyIfAdmin, async (req, res) => {
+	const _id = req.body;
+	const result = await model.approveMember(_id);
+	res.status(200).send(result);
+});
+
+
+
+
+
+
+
 
 // Define a route for getting all books grouped by author
 app.get('/authors/:authorID', async (req, res) => {
 	try {
-	// 	const authorID = req.params.authorID.replace('+', ' '); // replace + with space
-	//   const author = req.params.authorID;
-	  
-	//   const books = await Book.find({ author });
-	//   res.json({ author, books });
 	const authorID = req.params.authorID.replace('+', ' '); // replace + with space
     const books = await Book.find({ author: authorID });
     res.json({ author: authorID, books });
-	
+
 	} catch (err) {
 	  console.log(err);
 	  res.status(500).json({ message: 'Internal server error' });
