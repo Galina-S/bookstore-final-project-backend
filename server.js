@@ -127,14 +127,31 @@ app.post('/register', async (req, res) => {
 	
 
 
-  app.get('/books/:id/views', async (req, res) => {
-	const book = await Book.findById(req.params.id);
-	book.viewsCount += 1;
-	await book.save();
-	res.send({ viewsCount: book.viewsCount });
+//   app.get('/books/:id/views', async (req, res) => {
+// 	const book = await Book.findById(req.params.id);
+// 	book.viewsCount += 1;
+// 	await book.save();
+// 	res.send({ viewsCount: book.viewsCount });
+//   });
+
+// Define a route for getting all books grouped by author
+app.get('/authors/:authorID', async (req, res) => {
+	try {
+	// 	const authorID = req.params.authorID.replace('+', ' '); // replace + with space
+	//   const author = req.params.authorID;
+	  
+	//   const books = await Book.find({ author });
+	//   res.json({ author, books });
+	const authorID = req.params.authorID.replace('+', ' '); // replace + with space
+    const books = await Book.find({ author: authorID });
+    res.json({ author: authorID, books });
+	
+	} catch (err) {
+	  console.log(err);
+	  res.status(500).json({ message: 'Internal server error' });
+	}
   });
-  
-  
+
   
 const startApp = async () => {
     try {
