@@ -13,6 +13,15 @@ const findNovels = async (req, res) => {
   res.status(500).send(err);  
  }
 };
+const newReleases = async (req, res) => {
+  try {
+    const _newReleases = await Book.find({ puplication: { $gte: new Date('2023-01-01') } })
+    .sort({ puplication: 'asc' })
+    return res.status(200).json(_newReleases);
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
 
 const getAllBooks = async (req, res) => {
   try {
@@ -203,12 +212,16 @@ const getFavorites = async (req, res) => {
 
 
 
-export { getAllBooks, addNewBook, 
-  getOneBook, updateBook,
-   deleteBook, 
-   loginUser, getCurrentUser,
-   findNovels,
-   addToFavorites,
-   getFavorites
-
+export { 
+  getAllBooks, 
+  addNewBook, 
+  getOneBook, 
+  updateBook,
+  deleteBook, 
+  loginUser, 
+  getCurrentUser,
+  findNovels,
+  addToFavorites,
+  getFavorites,
+  newReleases,
   };

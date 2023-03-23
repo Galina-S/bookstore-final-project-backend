@@ -15,6 +15,7 @@ import {
   getFavorites,
   addToFavorites,
   //updateBookViews
+  newReleases,
 
 } from "./controller.js";
 
@@ -39,9 +40,12 @@ router.get('/get-current-user', getCurrentUser);
 
 router.get("/novels", findNovels);
 
-router.get("/users/:userId/favorites", getFavorites);
 
+router.get("/users/:userId/favorites", getFavorites);
 // router.post("/users/:userId/favorites", addToFavorites);
+
+router.get("/new-books", newReleases)
+
 
 
 
