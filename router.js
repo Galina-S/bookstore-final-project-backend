@@ -129,22 +129,17 @@ router.delete('/users/:userId/favorites/:bookId', async (req, res) => {
 });
 
 
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'User is not authenticated' });
+};
 
+// Route to get authenticated user's information
+router.get('/me', isAuthenticated, (req, res) => {
+  res.json(req.user);
+});
 
-
-// const deleteBook = async (req, res) => {
-//   try {
-//     const bookId = req.params.id;
-//     if (!bookId) {
-//       res.status(400).json({
-//         error: true,
-//         message: `Book with id ${bookId} does not exist. Delete failed`,
-//       }); /** testen */
-//     }
-//     const deleteBook = await Book.findByIdAndDelete(bookId);
-//     return res.status(200).json({message: "Book successfully deleted"});
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// };
 export default router;
