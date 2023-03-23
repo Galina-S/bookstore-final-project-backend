@@ -1,5 +1,6 @@
 import express from "express";
-
+import User from "./src/models/User.js";
+import Book from "./src/models/Book.js";
 
 import {
   getAllBooks,
@@ -11,6 +12,8 @@ import {
   getCurrentUser,
   // registerNewUser,
   findNovels,
+  getFavorites,
+  addToFavorites,
   //updateBookViews
 
 } from "./controller.js";
@@ -34,8 +37,110 @@ router.get('/get-current-user', getCurrentUser);
 
 // router.post('/register', registerNewUser);
 
-router.get("/novels", findNovels)
+router.get("/novels", findNovels);
+
+router.get("/users/:userId/favorites", getFavorites);
+
+// router.post("/users/:userId/favorites", addToFavorites);
 
 
 
+
+router.post('/users/:userId/favorites/:bookId', async (req, res) => {
+  const { userId, bookId } = req.params;
+  
+  
+  console.log("BookID", bookId);
+  console.log("userId", userId);
+  try {
+    const user = await User.findById(req.params.userId);
+    //const user = req.session.user; // Retrieve the user from the session
+    if (!user) {
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
+    }
+
+    if (!user.favorites.includes(bookId)) {
+      user.favorites.push(bookId);
+      await user.save(); // Save the updated user document in the database
+      console.log(user.favorites)
+      req.session.user = user; // Update the user in the session
+      res.json({ message: 'Book added to favorites' });
+    } else {
+      res.json({ message: 'Book is already in favorites' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+router.get('/users/:userId/favorites/:bookId', async (req, res) => {
+  const { userId, bookId } = req.params;
+
+  try {
+    //const user = req.session.user; // Retrieve the user from the session
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
+    }
+
+    const isFavorite = user.favorites.includes(bookId);
+
+    res.json({ isFavorite });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+router.delete('/users/:userId/favorites/:bookId', async (req, res) => {
+  const { userId, bookId } = req.params;
+  
+  try {
+    const user = await User.findById(req.params.userId);
+    //const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const index = user.favorites.indexOf(bookId);
+    if (index === -1) {
+      res.status(404).json({ message: 'Book not found in favorites' });
+      return;
+    }
+
+    user.favorites.splice(index, 1);
+    await user.save();
+
+    res.json({ message: 'Book removed from favorites' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+
+
+// const deleteBook = async (req, res) => {
+//   try {
+//     const bookId = req.params.id;
+//     if (!bookId) {
+//       res.status(400).json({
+//         error: true,
+//         message: `Book with id ${bookId} does not exist. Delete failed`,
+//       }); /** testen */
+//     }
+//     const deleteBook = await Book.findByIdAndDelete(bookId);
+//     return res.status(200).json({message: "Book successfully deleted"});
+//   } catch (err) {
+//     res.status(500).send(err);
+//   }
+// };
 export default router;

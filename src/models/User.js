@@ -5,7 +5,9 @@ export const User= new mongoose.Schema({
 	email: String,
 	hash: String,
 	img:String,
-	favorites:{type: Array, default: [] },
+	favorites:{ 
+		type: Array
+	  },
 	accessGroups: [String],
 });
 

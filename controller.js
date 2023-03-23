@@ -2,6 +2,8 @@ import Book from "./src/models/Book.js";
 import * as model from './model.js';
 import * as tools from './tools.js';
 import * as config from './config.js';
+import User from "./src/models/User.js";
+
 
 const findNovels = async (req, res) => {
  try {
@@ -20,6 +22,9 @@ const getAllBooks = async (req, res) => {
     res.status(500).send(err);
   }
 };
+
+
+
 
 const getOneBook = async (req, res) => {
   const bookId = req.params.id;
@@ -117,6 +122,12 @@ const loginUser =  async (req, res) => {
 			}
       //console.log(frontendUser)
 			req.session.user = frontendUser;
+
+      // Set the user ID in the session
+      req.session.userId = user._id;
+
+
+
 			req.session.cookie.expires = new Date(Date.now() + config.SECONDS_TILL_SESSION_TIMEOUT * 1000);
 			req.session.save();
 			res.status(200).send(frontendUser);
@@ -139,6 +150,55 @@ const getCurrentUser = async (req, res) => {
 };
 
 
+const addToFavorites = async (req, res) => {
+  try {
+    const book = await Book.findById(req.body.bookId);
+    const user = await User.findById(req.params.userId);
+    if (!user.favorites.includes(book._id)) {
+      user.favorites.push(book._id);
+      await user.save();
+      res.json({ message: 'Book added to favorites' });
+    } else {
+      res.json({ message: 'Book is already in favorites' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+const getFavorites = async (req, res) => {
+  try {
+    
+    const { userId, bookId } = req.params;
+    const user = await User.findById(req.params.userId);
+   // const user = await User.findById(req.session.use);
+    console.log(user.favorites);
+    res.json(user.favorites);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+
+// const getOneBook = async (req, res) => {
+//   const bookId = req.params.id;
+//   let book;
+//   try {
+//     book = await Book.findOneAndUpdate({_id: bookId}, {
+//       $inc: { viewsCount: 1},  //increment
+//   },{
+//     returnDocument: 'after', //return an actual doc after update
+// });
+//   } catch (err) {
+//     res.status(500).json({message: 'Could not get any book'} );
+//   }
+//   if (!book) {
+//     return res.status(404).json({ message: "No book found" }); /** testen */
+//   }
+//   return res.status(200).json({book});  
+// };
 
 
 
@@ -148,5 +208,7 @@ export { getAllBooks, addNewBook,
    deleteBook, 
    loginUser, getCurrentUser,
    findNovels,
+   addToFavorites,
+   getFavorites
 
   };
