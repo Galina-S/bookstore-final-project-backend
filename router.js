@@ -59,7 +59,11 @@ router.post('/users/:userId/favorites/:bookId', async (req, res) => {
     }
 
     if (!user.favorites.includes(bookId)) {
-      user.favorites.push(bookId);
+
+      if ((user.username ==="anonymousUser") && (user.favorites.length>=6))
+       {}
+      else {user.favorites.push(bookId);}
+      
       await user.save(); // Save the updated user document in the database
       console.log(user.favorites)
       req.session.user = user; // Update the user in the session
@@ -131,7 +135,7 @@ const isAuthenticated = (req, res, next) => {
   res.status(401).json({ message: 'User is not authenticated' });
 };
 
-// Route to get authenticated user's information
+//  Route to get authenticated user's information
 // router.get('/me', isAuthenticated, (req, res) => {
 //   res.json(req.user);
 // });
