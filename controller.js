@@ -135,8 +135,6 @@ const loginUser =  async (req, res) => {
       // Set the user ID in the session
       req.session.userId = user._id;
 
-
-
 			req.session.cookie.expires = new Date(Date.now() + config.SECONDS_TILL_SESSION_TIMEOUT * 1000);
 			req.session.save();
 			res.status(200).send(frontendUser);
@@ -178,39 +176,15 @@ const addToFavorites = async (req, res) => {
 
 const getFavorites = async (req, res) => {
   try {
-    
     const { userId, bookId } = req.params;
     const user = await User.findById(req.params.userId);
    // const user = await User.findById(req.session.use);
-    console.log(user.favorites);
     res.json(user.favorites);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-
-
-// const getOneBook = async (req, res) => {
-//   const bookId = req.params.id;
-//   let book;
-//   try {
-//     book = await Book.findOneAndUpdate({_id: bookId}, {
-//       $inc: { viewsCount: 1},  //increment
-//   },{
-//     returnDocument: 'after', //return an actual doc after update
-// });
-//   } catch (err) {
-//     res.status(500).json({message: 'Could not get any book'} );
-//   }
-//   if (!book) {
-//     return res.status(404).json({ message: "No book found" }); /** testen */
-//   }
-//   return res.status(200).json({book});  
-// };
-
-
-
 
 export { 
   getAllBooks, 

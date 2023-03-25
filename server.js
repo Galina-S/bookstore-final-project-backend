@@ -3,8 +3,6 @@ import mongoose from "mongoose";
 import router from "./router.js";
 import cors from "cors";
 import session from 'express-session';
-
-
 import * as tools from './tools.js';
 import * as config from './config.js';
 import cookieParser from 'cookie-parser';
@@ -30,7 +28,6 @@ app.use(
 		resave: true,
 		saveUninitialized: true,
 		secret: config.SESSION_SECRET,
-		
 		cookie: {
 			httpOnly: true,
 			sameSite: 'lax',
@@ -39,14 +36,11 @@ app.use(
 	})
 );
 
-
-
 app.get("/", (req, res) => {
     res.send(model.getApiInstructionsHtml())
 });
 
 app.use("/", router);
-
 
 app.get("/test", (req, res) => {
     res.json(model.getTest())
@@ -66,13 +60,10 @@ app.post('/login', async (req, res) => {
 				favorites: user.favorites,
 			}
 			req.session.user = frontendUser;
-		
-
 
   // Set the user ID in the session
-  req.session.userId = user._id;
-
-console.log(req.session.userId);
+  	req.session.userId = user._id;
+	// console.log(req.session.userId);
 
 			req.session.cookie.expires = new Date(Date.now() + config.SECONDS_TILL_SESSION_TIMEOUT * 1000);
 			req.session.save();
@@ -199,10 +190,6 @@ app.patch('/approve-member', authorizeOnlyIfAdmin, async (req, res) => {
 	const result = await model.approveMember(_id);
 	res.status(200).send(result);
 });
-
-
-
-
 
 
 

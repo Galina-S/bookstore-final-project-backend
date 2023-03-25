@@ -46,19 +46,13 @@ router.get("/users/:userId/favorites", getFavorites);
 
 router.get("/new-books", newReleases)
 
-
-
-
-
 router.post('/users/:userId/favorites/:bookId', async (req, res) => {
   const { userId, bookId } = req.params;
-  
-  
-  console.log("BookID", bookId);
-  console.log("userId", userId);
+  // console.log("BookID", bookId);
+  // console.log("userId", userId);
   try {
     const user = await User.findById(req.params.userId);
-    //const user = req.session.user; // Retrieve the user from the session
+    //const user = req.session.user;  Retrieve the user from the session
     if (!user) {
       res.status(401).json({ message: 'User not authenticated' });
       return;
@@ -138,8 +132,8 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Route to get authenticated user's information
-router.get('/me', isAuthenticated, (req, res) => {
-  res.json(req.user);
-});
+// router.get('/me', isAuthenticated, (req, res) => {
+//   res.json(req.user);
+// });
 
 export default router;
