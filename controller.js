@@ -1,9 +1,9 @@
+import User from "./src/models/User.js";
 import Book from "./src/models/Book.js";
 import Comment from "./src/models/Comment.js";
 import * as model from './model.js';
 import * as tools from './tools.js';
 import * as config from './config.js';
-import User from "./src/models/User.js";
 
 
 const findNovels = async (req, res) => {
@@ -82,7 +82,6 @@ try {
   comment =  await Comment.create({
   commentId, userId, bookId, title, content, dateCreated,dateModified
 });
-
 await comment.save();
 } catch (err) {
 console.log(err)
@@ -92,8 +91,6 @@ return res.status(500).json({ message: "Unable to Add new Comment" }); /** teste
 }
 return res.status(201).json({ comment }); 
 };
-
-
 
 
 
@@ -134,7 +131,30 @@ const deleteBook = async (req, res) => {
   }
 };
 
+
+const deleteComment = async (req, res) => {
+  const commentId = req.params.commentId;
+  const bookId = req.params.bookId;
+  const { userId } = req.body;
+
+  // check if comment exists and user id matches
+  
+  if (!commentId) {
+    return res.status(404).json({ error: 'Comment not found' });
+  }
+
+  try {
+    await Comment.findByIdAndDelete(commentId);
+    return res.status(200).json({ message: 'Comment deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
 const loginUser =  async (req, res) => {
+  
 	const { username, password } = req.body;
 	const user = await model.getUser(username, password);
   // console.log(user)
@@ -219,5 +239,6 @@ export {
   addToFavorites,
   getFavorites,
   newReleases,
-  addNewComment
+  addNewComment,
+  deleteComment
   };

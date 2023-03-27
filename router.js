@@ -16,7 +16,8 @@ import {
   addToFavorites,
   //updateBookViews
   newReleases,
-  addNewComment
+  addNewComment,
+  deleteComment
 
 } from "./controller.js";
 
@@ -31,6 +32,8 @@ router.post("/books", addNewBook);
 router.put("/books/:id", updateBook);
 
 router.delete("/books/:id", deleteBook);
+
+router.delete("/books/:bookId/comments/:commentId", deleteComment);
 
 
 router.post("/login", loginUser);

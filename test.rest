@@ -1,4 +1,4 @@
-@url = http://localhost:5174
+@url = http://localhost:3005
 
 ### GET INFO
 GET {{url}}
@@ -97,3 +97,6 @@ content-type: application/json
     "dateCreated": "2023-03-26T23:00:00.000+00:00",
     "dateModified": "2023-03-26T23:00:00.000+00:00"
 }
+
+###DELETE COMMENT
+DELETE {{url}}/books/63f38c0734ad17350ccae915/comments/6421e7737beb5ef1ebb59b0d
