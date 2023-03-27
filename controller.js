@@ -1,4 +1,5 @@
 import Book from "./src/models/Book.js";
+import Comment from "./src/models/Comment.js";
 import * as model from './model.js';
 import * as tools from './tools.js';
 import * as config from './config.js';
@@ -73,6 +74,26 @@ const addNewBook = async (req, res) => {
   }
   return res.status(201).json({ book }); 
 };
+
+const addNewComment = async (req, res) => {
+  const {commentId, userId, bookId, title, content, dateCreated,dateModified } =req.body;
+  let comment
+try {
+  comment =  await Comment.create({
+  commentId, userId, bookId, title, content, dateCreated,dateModified
+});
+
+await comment.save();
+} catch (err) {
+console.log(err)
+}  
+if (!comment) {
+return res.status(500).json({ message: "Unable to Add new Comment" }); /** testen */
+}
+return res.status(201).json({ comment }); 
+};
+
+
 
 
 
@@ -198,4 +219,5 @@ export {
   addToFavorites,
   getFavorites,
   newReleases,
+  addNewComment
   };

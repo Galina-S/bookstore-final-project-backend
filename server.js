@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import * as model from './model.js';
 import Book from "./src/models/Book.js";
 import User from './src/models/User.js';
+import Comment from './src/models/Comment.js';
 import bcrypt from "bcrypt";
 
 mongoose.set('strictQuery', false)
@@ -16,12 +17,22 @@ mongoose.set('strictQuery', false)
 const app = express();
 app.use(express.json()); 
 
-app.use(cors({
-	origin: config.FRONTEND_URL,
-	methods: ['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS', 'HEAD'],
-	credentials: true
-}));
+// app.use(cors({
+// 	origin: config.FRONTEND_URL,
+// 	methods: ['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS', 'HEAD'],
+// 	credentials: true
+// }));
+// app.use(cors());
 app.use(cookieParser());
+
+// Enable CORS
+app.use((req, res, next) => {
+	res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+	res.setHeader("Access-Control-Allow-Credentials", "true");
+	next();
+  });
 
 app.use(
 	session({
@@ -207,6 +218,23 @@ app.get('/authors/:authorID', async (req, res) => {
 	}
   });
 
+
+  app.get('/books/:bookId/comments', async (req, res) => {
+	const { bookId } = req.params;
+  
+	try {
+	  // Query the Comment model for all comments with the specified book ID
+	  const comments = await Comment.find({ bookId });
+  
+	  // Send the comments as the response
+	  res.json(comments);
+	} catch (err) {
+	  console.error(err);
+	  res.status(500).send('An error occurred while retrieving comments');
+	}
+  });
+
+
   
 const startApp = async () => {
     try {
@@ -217,6 +245,21 @@ const startApp = async () => {
         console.log(err);
     }
 } 
+
+app.get('/users/:userId/username', async (req, res) => {
+	const { userId } = req.params;
+  
+	try {
+	  // Query the User model for the user with the specified ID
+	  const user = await User.findOne({ userId });
+  
+	  // Send the username as the response
+	  res.json(user.username);
+	} catch (err) {
+	  console.error(err);
+	  res.status(500).send('An error occurred while retrieving the username');
+	}
+  });
 
   
 startApp();

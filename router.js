@@ -16,6 +16,7 @@ import {
   addToFavorites,
   //updateBookViews
   newReleases,
+  addNewComment
 
 } from "./controller.js";
 
@@ -40,6 +41,8 @@ router.get('/get-current-user', getCurrentUser);
 
 router.get("/novels", findNovels);
 
+router.post("/books/:id", addNewComment)
+
 
 router.get("/users/:userId/favorites", getFavorites);
 // router.post("/users/:userId/favorites", addToFavorites);
@@ -62,6 +65,7 @@ router.post('/users/:userId/favorites/:bookId', async (req, res) => {
 
       if ((user.username ==="anonymousUser") && (user.favorites.length>=6))
        {}
+
       else {user.favorites.push(bookId);}
       
       await user.save(); // Save the updated user document in the database
@@ -139,5 +143,18 @@ const isAuthenticated = (req, res, next) => {
 // router.get('/me', isAuthenticated, (req, res) => {
 //   res.json(req.user);
 // });
+
+
+// Get user by ID
+router.get('/users/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await User.findById(id);
+    res.json({ username: user.username });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while retrieving the user');
+  }
+});
 
 export default router;

@@ -1,4 +1,4 @@
-@url = http://localhost:3005
+@url = http://localhost:5174
 
 ### GET INFO
 GET {{url}}
@@ -78,4 +78,22 @@ content-type: application/json
     "password": "Jul22",
     "email": "hall@gmail.com",
     "matchPassword": "Jul"
+}
+
+
+### GET COMMENTS
+GET {{url}}/books/63f380fa34ad17350ccae90a/comments
+
+### CREATE NEW COMMENT
+POST {{url}}/books/63f37d2034ad17350ccae904
+content-type: application/json
+
+{
+    "commentId": "9",
+    "userId": "63f5f8c2361e78933c79a5ca",
+    "bookId": "63f381ba34ad17350ccae90d",
+    "title": "Tiefgründige Autobiographie",
+    "content": "Das Cover zeigt eine Frau im Profil im Hintergrund sieht man Vögel. Das Cover hat eine dezente Farbe und irgendwie erinnert sie mich an eine Stelle im Buch mit dem Parka. Es ist ein autobiographischer Roman, in der aufgezeigt wird, dass die Identität durch viele verschiedene Gefühle wie Scham, Stolz, Eigensinn, Anpassung und Fremdsein gestärkt wird. Ein Mädchen reist mit ihren Eltern, der Grossmutter und ihrem Bruder von Russland nach Deutschland aus. In Deutschland angekommen, fühlen sie sich fremd. Mit der Zeit unterscheiden sich die Vorstellungen was Freiheit ist zwischen den Eltern und von Lena. Die Geschichte erzählt wie eine Frau zu sich findet.",
+    "dateCreated": "2023-03-26T23:00:00.000+00:00",
+    "dateModified": "2023-03-26T23:00:00.000+00:00"
 }
