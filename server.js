@@ -26,15 +26,17 @@ app.use(
 );
 app.use(cookieParser());
 
-//app.use(cors());
-// Enable CORS
-//app.use((req, res, next) => {
-//  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
-//  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//  res.setHeader("Access-Control-Allow-Credentials", "true");
-//  next();
-//});
+
+
+app.use(cors());
+
+app.use((req, res, next) => {
+ res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
+ res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+ res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+ res.setHeader("Access-Control-Allow-Credentials", "true");
+ next();
+});
 
 app.use(
   session({
@@ -72,7 +74,14 @@ app.post("/login", async (req, res) => {
         accessGroups: user.accessGroups,
         favorites: user.favorites,
       };
-      req.session.user = frontendUser;
+      reapp.use(
+		cors({
+		  origin: config.FRONTEND_URL,
+		  methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS", "HEAD"],
+		  credentials: true,
+		})
+	  );
+	  app.use(cookieParser());q.session.user = frontendUser;
 
       // Set the user ID in the session
       req.session.userId = user._id;
