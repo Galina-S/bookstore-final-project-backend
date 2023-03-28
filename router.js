@@ -23,8 +23,8 @@ import {
   logoutUser,
   getAllBooksByAuthor,
   getAllComments,
-  getUsernameFromUserId
-
+  getUsernameFromUserId,
+  getCart,
 } from "./controller.js";
 
 const router = express.Router();
@@ -41,30 +41,33 @@ router.delete("/books/:id", deleteBook);
 
 router.post("/login", loginUser);
 
-router.get("/logout", logoutUser)
+router.get("/logout", logoutUser);
 
-router.get('/get-current-user', getCurrentUser);
+router.get("/get-current-user", getCurrentUser);
 
-router.post('/register', registerNewUser);
+router.post("/register", registerNewUser);
 
 router.get("/novels", findNovels);
 
+router.post("/books/:id", addNewComment);
+
 router.get("/new-books", newReleases);
 
+//Favourites
 router.get("/users/:userId/favorites", getFavorites);
 
-router.post('/users/:userId/favorites/:bookId', addToFavorites);
+router.post("/users/:userId/favorites/:bookId", addToFavorites);
 
-router.get('/users/:userId/favorites/:bookId', isBookFavorite);
+router.get("/users/:userId/favorites/:bookId", isBookFavorite);
 
 router.post("/books/:id", addNewComment);
 
 router.delete("/books/:bookId/comments/:commentId", deleteComment);
 
-router.delete('/users/:userId/favorites/:bookId', deleteFromFavorites);
+router.delete("/users/:userId/favorites/:bookId", deleteFromFavorites);
 
 // Get user by ID
-router.get('/users/:id', getUserById);
+router.get("/users/:id", getUserById);
 
 // Define a route for getting all books grouped by author
 router.get("/authors/:authorID", getAllBooksByAuthor);

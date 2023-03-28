@@ -26,9 +26,7 @@ app.use(
 );
 app.use(cookieParser());
 
-
-
-app.use(cors());
+//app.use(cors());
 
 // app.use(cors());
 // app.use((req, res, next) => {
@@ -61,7 +59,6 @@ app.use("/", router);
 app.get("/test", (req, res) => {
   res.json(model.getTest());
 });
-
 
 // PROTECTED ROUTES
 
@@ -130,7 +127,6 @@ app.patch("/approve-member", authorizeOnlyIfAdmin, async (req, res) => {
   res.status(200).send(result);
 });
 
-
 const startApp = async () => {
   try {
     // await mongoose.connect(config.MONGODB_CONNECTION)
@@ -142,7 +138,5 @@ const startApp = async () => {
     console.log(err);
   }
 };
-
-
 
 startApp();
