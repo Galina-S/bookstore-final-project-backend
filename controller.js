@@ -482,6 +482,8 @@ export {
   updateBook,
   deleteBook,
   loginUser,
+  logoutUser,
+  registerNewUser,
   getCurrentUser,
   findNovels,
   addToFavorites,
