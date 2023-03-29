@@ -25,7 +25,9 @@ import {
   getAllComments,
   getUsernameFromUserId,
   getCart,
+  addToCart,
 } from "./controller.js";
+import { getUser } from "./model.js";
 
 const router = express.Router();
 
@@ -68,6 +70,11 @@ router.delete("/users/:userId/favorites/:bookId", deleteFromFavorites);
 
 // Get user by ID
 router.get("/users/:id", getUserById);
+
+//Cart
+router.get("/users/:userId/cart", getCart);
+
+router.post("/users/:userId/cart/:bookId", addToCart);
 
 // Define a route for getting all books grouped by author
 router.get("/authors/:authorID", getAllBooksByAuthor);

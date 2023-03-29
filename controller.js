@@ -448,12 +448,12 @@ const getUsernameFromUserId = async (req, res) => {
 
 const addToCart = async (req, res) => {
   try {
-    const book = await Book.findById(req.body.bookId);
+    const book = await Book.findById(req.params.bookId);
     const user = await User.findById(req.params.userId);
     if (!user.cartItems.includes(book._id)) {
       user.cartItems.push(book._id);
       await user.save();
-      res.json({ message: "Book added to favorites" });
+      res.json({ message: "Book added to cart" });
     } else {
       res.json({ message: "Book is already in favorites" });
     }
