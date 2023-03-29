@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Book = new mongoose.Schema( {
     author: String,
-    img: String,
+    img: {type: String, default :"https://i.ibb.co/mh9LSfd/keinBild.jpg"},
     title: String,
     description: String,
     price: Number,
