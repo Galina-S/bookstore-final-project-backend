@@ -9,15 +9,21 @@ import {
   updateBook,
   deleteBook,
   loginUser,
+  getUserById,
   getCurrentUser,
-  // registerNewUser,
+  registerNewUser,
   findNovels,
   getFavorites,
   addToFavorites,
-  //updateBookViews
   newReleases,
   addNewComment,
-  deleteComment
+  deleteComment,
+  isBookFavorite,
+  deleteFromFavorites,
+  logoutUser,
+  getAllBooksByAuthor,
+  getAllComments,
+  getUsernameFromUserId
 
 } from "./controller.js";
 
@@ -33,131 +39,39 @@ router.put("/books/:id", updateBook);
 
 router.delete("/books/:id", deleteBook);
 
-router.delete("/books/:bookId/comments/:commentId", deleteComment);
-
-
 router.post("/login", loginUser);
+
+router.get("/logout", logoutUser)
 
 router.get('/get-current-user', getCurrentUser);
 
-// router.post('/register', registerNewUser);
+router.post('/register', registerNewUser);
 
 router.get("/novels", findNovels);
 
-router.post("/books/:id", addNewComment)
-
+router.get("/new-books", newReleases);
 
 router.get("/users/:userId/favorites", getFavorites);
-// router.post("/users/:userId/favorites", addToFavorites);
 
-router.get("/new-books", newReleases)
+router.post('/users/:userId/favorites/:bookId', addToFavorites);
 
-router.post('/users/:userId/favorites/:bookId', async (req, res) => {
-  const { userId, bookId } = req.params;
-  // console.log("BookID", bookId);
-  // console.log("userId", userId);
-  try {
-    const user = await User.findById(req.params.userId);
-    //const user = req.session.user;  Retrieve the user from the session
-    if (!user) {
-      res.status(401).json({ message: 'User not authenticated' });
-      return;
-    }
+router.get('/users/:userId/favorites/:bookId', isBookFavorite);
 
-    if (!user.favorites.includes(bookId)) {
+router.post("/books/:id", addNewComment);
 
-      if ((user.username ==="anonymousUser") && (user.favorites.length>=6))
-       {}
+router.delete("/books/:bookId/comments/:commentId", deleteComment);
 
-      else {user.favorites.push(bookId);}
-      
-      await user.save(); // Save the updated user document in the database
-      console.log(user.favorites)
-      req.session.user = user; // Update the user in the session
-      res.json({ message: 'Book added to favorites' });
-    } else {
-      res.json({ message: 'Book is already in favorites' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-router.get('/users/:userId/favorites/:bookId', async (req, res) => {
-  const { userId, bookId } = req.params;
-
-  try {
-    //const user = req.session.user; // Retrieve the user from the session
-    const user = await User.findById(req.params.userId);
-    if (!user) {
-      res.status(401).json({ message: 'User not authenticated' });
-      return;
-    }
-
-    const isFavorite = user.favorites.includes(bookId);
-
-    res.json({ isFavorite });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-
-
-router.delete('/users/:userId/favorites/:bookId', async (req, res) => {
-  const { userId, bookId } = req.params;
-  
-  try {
-    const user = await User.findById(req.params.userId);
-    //const user = await User.findById(userId);
-    if (!user) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-
-    const index = user.favorites.indexOf(bookId);
-    if (index === -1) {
-      res.status(404).json({ message: 'Book not found in favorites' });
-      return;
-    }
-
-    user.favorites.splice(index, 1);
-    await user.save();
-
-    res.json({ message: 'Book removed from favorites' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-
-// Middleware to check if user is authenticated
-const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).json({ message: 'User is not authenticated' });
-};
-
-//  Route to get authenticated user's information
-// router.get('/me', isAuthenticated, (req, res) => {
-//   res.json(req.user);
-// });
-
+router.delete('/users/:userId/favorites/:bookId', deleteFromFavorites);
 
 // Get user by ID
-router.get('/users/:id', async (req, res) => {
-  const id = req.params.id;
-  try {
-    const user = await User.findById(id);
-    res.json({ username: user.username });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('An error occurred while retrieving the user');
-  }
-});
+router.get('/users/:id', getUserById);
+
+// Define a route for getting all books grouped by author
+router.get("/authors/:authorID", getAllBooksByAuthor);
+
+//get all Comments
+router.get("/books/:bookId/comments", getAllComments);
+
+router.get("/users/:userId/username", getUsernameFromUserId);
 
 export default router;

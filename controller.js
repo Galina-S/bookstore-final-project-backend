@@ -4,7 +4,7 @@ import Comment from "./src/models/Comment.js";
 import * as model from './model.js';
 import * as tools from './tools.js';
 import * as config from './config.js';
-
+import bcrypt from "bcrypt";
 
 const findNovels = async (req, res) => {
  try {
@@ -32,8 +32,6 @@ const getAllBooks = async (req, res) => {
     res.status(500).send(err);
   }
 };
-
-
 
 
 const getOneBook = async (req, res) => {
@@ -161,7 +159,6 @@ const loginUser =  async (req, res) => {
 	if (user !== null) {
 		const passwordIsCorrect = await tools.passwordIsCorrect(password, user.hash);
 		if (passwordIsCorrect) {
-
       const frontendUser = {
 				_id: user._id,
 				username: user.username,
@@ -181,11 +178,60 @@ const loginUser =  async (req, res) => {
 			res.status(200).send(frontendUser);
 		} else {
 			res.status(401).send('Bad password');
+      const anonymousUser = await model.getAnonymousUser();
+      res.status(200).send(anonymousUser);
 		}
 	} else {
 		res.status(401).send('Bad username or both fields');
+    const anonymousUser = await model.getAnonymousUser();
+    res.status(200).send(anonymousUser);
 	}
 };
+
+const registerNewUser = async (req, res) => {
+  const { username, email, password } = req.body;
+
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+
+    if (existingUser) {
+      res.status(409).send("User already exists!");
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const user = new User({
+        username,
+        email,
+        hash: hashedPassword,
+        comments: [],
+        img: "https://i.ibb.co/0FnL399/no-image.jpg",
+        accessGroups: ["members"],
+        favorites: [],
+      });
+
+      await user.save();
+      res.status(200).json({ message: "Registration successful." });
+      // res.status(200).send('User created successfully!');
+    }
+  } catch (err) {
+    // res.status(500).send(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
+const getUserById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await User.findById(id);
+    res.json({ username: user.username });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while retrieving the user');
+  }
+}
 
 
 const getCurrentUser = async (req, res) => {
@@ -197,18 +243,60 @@ const getCurrentUser = async (req, res) => {
 	}
 };
 
+const logoutUser = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      res.send("ERROR");
+    } else {
+      res.send("logged out");
+    }
+  });
+};
 
 const addToFavorites = async (req, res) => {
+  const { userId, bookId } = req.params;
   try {
-    const book = await Book.findById(req.body.bookId);
     const user = await User.findById(req.params.userId);
-    if (!user.favorites.includes(book._id)) {
-      user.favorites.push(book._id);
-      await user.save();
+
+    if (!user) {
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
+    }
+
+    if (!user.favorites.includes(bookId)) {
+
+      if ((user.username ==="anonymousUser") && (user.favorites.length>=6))
+       {}
+        else {user.favorites.push(bookId);}
+  
+      await user.save(); // Save the updated user document in the database
+      console.log(user.favorites)
+      req.session.user = user; // Update the user in the session
       res.json({ message: 'Book added to favorites' });
     } else {
       res.json({ message: 'Book is already in favorites' });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+
+const isBookFavorite = async (req, res) => {
+  const { userId, bookId } = req.params;
+
+  try {
+    //const user = req.session.user; // Retrieve the user from the session
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
+    }
+
+    const isFavorite = user.favorites.includes(bookId);
+
+    res.json({ isFavorite });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -227,6 +315,73 @@ const getFavorites = async (req, res) => {
   }
 };
 
+const deleteFromFavorites = async (req, res) => {
+  const { userId, bookId } = req.params;
+  
+  try {
+    const user = await User.findById(req.params.userId);
+    //const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const index = user.favorites.indexOf(bookId);
+    if (index === -1) {
+      res.status(404).json({ message: 'Book not found in favorites' });
+      return;
+    }
+
+    user.favorites.splice(index, 1);
+    await user.save();
+
+    res.json({ message: 'Book removed from favorites' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+const getAllBooksByAuthor = async (req, res) => {
+  try {
+    const authorID = req.params.authorID.replace("+", " "); // replace + with space
+    const books = await Book.find({ author: authorID });
+    res.json({ author: authorID, books });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+const getAllComments = async (req, res) => {
+ const { bookId } = req.params;
+
+ try {
+   // Query the Comment model for all comments with the specified book ID
+   const comments = await Comment.find({ bookId });
+
+   // Send the comments as the response
+   res.json(comments);
+ } catch (err) {
+   console.error(err);
+   res.status(500).send("An error occurred while retrieving comments");
+ }
+}
+const  getUsernameFromUserId = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Query the User model for the user with the specified ID
+    const user = await User.findOne({ userId });
+
+    // Send the username as the response
+    res.json(user.username);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("An error occurred while retrieving the username");
+  }
+}
+
 export { 
   getAllBooks, 
   addNewBook, 
@@ -234,11 +389,19 @@ export {
   updateBook,
   deleteBook, 
   loginUser, 
+  logoutUser,
+  registerNewUser,
   getCurrentUser,
   findNovels,
   addToFavorites,
   getFavorites,
   newReleases,
   addNewComment,
-  deleteComment
+  deleteComment,
+  isBookFavorite,
+  deleteFromFavorites,
+  getUserById,
+  getAllBooksByAuthor,
+  getAllComments,
+  getUsernameFromUserId
   };
