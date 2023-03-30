@@ -26,6 +26,7 @@ import {
   getUsernameFromUserId,
   getCart,
   addToCart,
+  removeFromCart,
 } from "./controller.js";
 import { getUser } from "./model.js";
 
@@ -75,6 +76,8 @@ router.get("/users/:id", getUserById);
 router.get("/users/:userId/cart", getCart);
 
 router.post("/users/:userId/cart/:bookId", addToCart);
+
+router.delete("/users/:userId/cart/:bookId", removeFromCart);
 
 // Define a route for getting all books grouped by author
 router.get("/authors/:authorID", getAllBooksByAuthor);

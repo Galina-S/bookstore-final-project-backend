@@ -475,6 +475,32 @@ const getCart = async (req, res) => {
   }
 };
 
+const removeFromCart = async (req, res) => {
+  const { userId, bookId } = req.params;
+
+  try {
+    const user = await User.findById(req.params.userId);
+    //const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const index = user.cartItems.indexOf(bookId);
+    if (index === -1) {
+      res.status(404).json({ message: "Book not found in cart" });
+      return;
+    }
+
+    user.cartItems.splice(index, 1);
+    await user.save();
+
+    res.json({ message: "Book removed from cart" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 export {
   getAllBooks,
   addNewBook,
@@ -499,4 +525,5 @@ export {
   getUsernameFromUserId,
   addToCart,
   getCart,
+  removeFromCart,
 };
