@@ -37,6 +37,11 @@ app.use((req, res, next) => {
  next();
 });
 
+app.use(cors({
+  origin: 'https://bookstore-final-project-2bpg.vercel.app', // replace with your client's origin URL
+  credentials: true
+}))
+
 app.use(
   session({
     resave: true,
