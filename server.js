@@ -50,9 +50,9 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.send(model.getApiInstructionsHtml());
-});
+// app.get("/", (req, res) => {
+//   res.send(model.getApiInstructionsHtml());
+// });
 
 app.use("/", router);
 
