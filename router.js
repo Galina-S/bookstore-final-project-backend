@@ -27,6 +27,8 @@ import {
   getCart,
   addToCart,
   removeFromCart,
+  updateEmail,
+  updateProfileImage
 } from "./controller.js";
 import { getUser } from "./model.js";
 
@@ -87,4 +89,7 @@ router.get("/books/:bookId/comments", getAllComments);
 
 router.get("/users/:userId/username", getUsernameFromUserId);
 
+router.put("/users/:userId/email", updateEmail);
+
+router.put("/users/:userId/profile-image", updateProfileImage);
 export default router;
