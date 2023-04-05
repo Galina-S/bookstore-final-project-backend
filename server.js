@@ -17,18 +17,16 @@ mongoose.set("strictQuery", false);
 const app = express();
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: config.FRONTEND_URL,
-    methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS", "HEAD"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'https://bookstore-final-project-git-dev-galina-s.vercel.app',// replace with your client's origin URL
+  methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS", "HEAD"],
+  credentials: true
+}))
+
+app.set('trust proxy', 1);
+
 app.use(cookieParser());
 
-//app.use(cors());
-
-//app.use(cors());
 //app.use((req, res, next) => {
 // res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
 // res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
@@ -37,11 +35,6 @@ app.use(cookieParser());
 // next();
 //});
 
-app.use(cors({
-  //https://bookstore-final-project-2bpg.vercel.app
-  origin: 'https://bookstore-final-project-git-dev-galina-s.vercel.app',// replace with your client's origin URL
-  credentials: true
-}))
 
 app.use(
   session({
@@ -55,6 +48,8 @@ app.use(
     },
   })
 );
+
+
 
 const startApp = async () => {
   try {
