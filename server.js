@@ -36,12 +36,14 @@ app.use(
     resave: true,
     saveUninitialized: true,
     secret: config.SESSION_SECRET,
+    proxy: true,
+    name: 'MyCoolWebAppCookieName',
     // cookie: {
     //   httpOnly: true,
     //   sameSite: "lax",
     //   secure: false,
     // },
-    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+    cookie: { httpOnly: false, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
   //   cookie: {
   //     httpOnly: true,
   //     sameSite: 'strict',
