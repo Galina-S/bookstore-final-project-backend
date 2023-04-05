@@ -60,6 +60,20 @@ app.use(
 //   res.send(model.getApiInstructionsHtml());
 // });
 
+const startApp = async () => {
+  try {
+    // await mongoose.connect(config.MONGODB_CONNECTION)
+    const conn = await mongoose.connect(process.env.MONGODB_CONNECTION);
+    console.log(`MongoDB connected: ${conn.connection.host}`)
+
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
+};
+
+
+
 app.use("/", router);
 
 app.get("/test", (req, res) => {
