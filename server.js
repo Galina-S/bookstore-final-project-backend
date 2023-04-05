@@ -49,6 +49,12 @@ app.use(
   })
 );
 
+app.all('/', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "https://bookstore-final-project-git-dev-galina-s.vercel.app/");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
+
 
 
 const startApp = async () => {
