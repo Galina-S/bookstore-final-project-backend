@@ -41,11 +41,16 @@ app.use(
     resave: true,
     saveUninitialized: true,
     secret: config.SESSION_SECRET,
+    // cookie: {
+    //   httpOnly: true,
+    //   sameSite: "lax",
+    //   secure: false,
+    // },
     cookie: {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-    },
+      sameSite: 'strict',
+      secure: true
+  }
   })
 );
 
