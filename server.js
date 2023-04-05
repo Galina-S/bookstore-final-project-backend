@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 app.use(cors({
   //https://bookstore-final-project-2bpg.vercel.app
-  origin: ['https://bookstore-final-project-2bpg.vercel.app', 'https://elegant-rose-outerwear.cyclic.app','http://localhost:5174', 'https://bookstore-final-project-2bpg-mwtckoos7-galina-s.vercel.app'],// replace with your client's origin URL
+  origin: 'http://localhost:5174',// replace with your client's origin URL
   credentials: true
 }))
 
