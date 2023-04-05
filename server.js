@@ -32,18 +32,16 @@ app.enable('trust proxy');
 
 app.use(
   session({
-    
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     secret: config.SESSION_SECRET,
-    proxy: true,
-    name: 'MyCoolWebAppCookieName',
+    saveUninitialized: false,
     // cookie: {
     //   httpOnly: true,
     //   sameSite: "lax",
     //   secure: false,
     // },
-    cookie: { httpOnly: false, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+    cookie: { maxAge: 86400000  }
   //   cookie: {
   //     httpOnly: true,
   //     sameSite: 'strict',
