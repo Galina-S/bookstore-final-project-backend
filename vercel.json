@@ -1,0 +1,13 @@
+ {
+    "headers": [
+      {
+        "source": "*/*",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "https://bookstore-final-project-2bpg.vercel.app, http://localhost:5174"
+          }
+        ]
+      }
+    ]
+  }
