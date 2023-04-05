@@ -27,17 +27,12 @@ app.set('trust proxy', 1);
 
 app.use(cookieParser());
 
-//app.use((req, res, next) => {
-// res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
-// res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-// res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-// res.setHeader("Access-Control-Allow-Credentials", "true");
-// next();
-//});
 
+app.enable('trust proxy');
 
 app.use(
   session({
+    
     resave: true,
     saveUninitialized: true,
     secret: config.SESSION_SECRET,
@@ -46,11 +41,12 @@ app.use(
     //   sameSite: "lax",
     //   secure: false,
     // },
-    cookie: {
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: true
-  }
+    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+  //   cookie: {
+  //     httpOnly: true,
+  //     sameSite: 'strict',
+  //     secure: false
+  // }
   })
 );
 
