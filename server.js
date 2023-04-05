@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 app.use(cors({
   //https://bookstore-final-project-2bpg.vercel.app
-  origin: 'https://bookstore-final-project.vercel.app',// replace with your client's origin URL
+  origin: 'https://bookstore-final-project-git-dev-galina-s.vercel.app',// replace with your client's origin URL
   credentials: true
 }))
 
