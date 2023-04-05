@@ -147,17 +147,17 @@ app.patch("/approve-member", authorizeOnlyIfAdmin, async (req, res) => {
   res.status(200).send(result);
 });
 
-//const startApp = async () => {
-//  try {
-//    // await mongoose.connect(config.MONGODB_CONNECTION)
-//    await mongoose.connect(process.env.MONGODB_CONNECTION);
-//    app.listen(process.env.PORT || 3005, () =>
-//     console.log(`Server started on Port ${process.env.PORT}`)
-//    );
-//  } catch (err) {
-//    console.log(err);
-//  }
-//};
+const startApp = async () => {
+ try {
+   // await mongoose.connect(config.MONGODB_CONNECTION)
+   await mongoose.connect(process.env.MONGODB_CONNECTION);
+   app.listen(process.env.PORT || 3005, () =>
+    console.log(`Server started on Port ${process.env.PORT}`)
+   );
+ } catch (err) {
+   console.log(err);
+ }
+};
 
 
 startApp().then (()=> {
