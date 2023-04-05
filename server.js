@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 app.use(cors({
   //https://bookstore-final-project-2bpg.vercel.app
-  origin: 'http://localhost:5174',// replace with your client's origin URL
+  origin: ['https://elegant-rose-outerwear.cyclic.app','http://localhost:5174'],// replace with your client's origin URL
   credentials: true
 }))
 
@@ -55,11 +55,6 @@ app.use(
     },
   })
 );
-
-// app.get("/", (req, res) => {
-//   res.send(model.getApiInstructionsHtml());
-// });
-
 
 const startApp = async () => {
   try {
