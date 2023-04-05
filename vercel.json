@@ -5,7 +5,7 @@
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
-            "value": "https://bookstore-final-project-2bpg.vercel.app, http://localhost:5174"
+            "value": "https://bookstore-final-project-2bpg.vercel.app, http://localhost:5174, https://bookstore-final-project-2bpg-git-dev-galina-s.vercel.app"
           }
         ]
       }
