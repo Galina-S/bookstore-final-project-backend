@@ -27,7 +27,6 @@ app.set('trust proxy', 1);
 
 app.use(cookieParser());
 
-
 app.enable('trust proxy');
 
 app.use(
@@ -41,7 +40,9 @@ app.use(
     //   sameSite: "lax",
     //   secure: false,
     // },
-    cookie: { maxAge: 86400000  }
+    
+    cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+   // cookie: { maxAge: 86400000  }
   //   cookie: {
   //     httpOnly: true,
   //     sameSite: 'strict',
