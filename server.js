@@ -32,15 +32,14 @@ app.enable('trust proxy');
 app.use(
   session({
     resave: false,
-    saveUninitialized: true,
     secret: config.SESSION_SECRET,
-    saveUninitialized: false,
-    // cookie: {
+       // cookie: {
     //   httpOnly: true,
     //   sameSite: "lax",
     //   secure: false,
     // },
-    
+     proxy: true, // if you do SSL outside of node.
+    saveUninitialized: true,
     cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
    // cookie: { maxAge: 86400000  }
   //   cookie: {
